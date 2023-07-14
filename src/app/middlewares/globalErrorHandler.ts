@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import config from '../../config';
 import ApiError from '../../errors/ApiError';
 import handleValidationError from '../../errors/handleValidationError';
+import handleZodError from '../../errors/handleZodError';
 import { IGenericErrorMessage } from '../../interfaces/error';
 
 const globalErrorHandler: ErrorRequestHandler = (
@@ -16,6 +18,11 @@ const globalErrorHandler: ErrorRequestHandler = (
 
   if (error.name === 'ValidationError') {
     const simplifiedError = handleValidationError(error);
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  } else if (error.name === 'ZodError') {
+    const simplifiedError = handleZodError(error);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorMessages = simplifiedError.errorMessages;
@@ -44,9 +51,9 @@ const globalErrorHandler: ErrorRequestHandler = (
 
   res.status(statusCode).json({
     success: false,
-    statusCode,
     message,
     errorMessages,
+    stack: config.env !== 'production' ? error?.stack : undefined,
   });
 };
 
