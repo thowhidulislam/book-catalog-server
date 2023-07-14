@@ -1,21 +1,14 @@
-import express, { Request, Response } from 'express'
-import httpStatus from 'http-status'
-import catchAsync from '../../../shared/catchAsync'
-import sendResponse from '../../../shared/sendResponse'
+import express from 'express';
+import validateRequest from '../../middlewares/validateRequest';
+import { AuthController } from './auth.controller';
+import { AuthValidation } from './auth.validation';
 
-const router = express.Router()
+const router = express.Router();
 
 router.post(
-  '/signup',
-  catchAsync(async (req: Request, res: Response) => {
-    const { ...userData } = req.body
-    const result = await UserController.createUser(userData)
+  '/create-user',
+  validateRequest(AuthValidation.createUserZodSchema),
+  AuthController.createUser,
+);
 
-    sendResponse(res, {
-      success: true,
-      status: httpStatus.OK,
-      message: 'User is created successfully',
-      data: result,
-    })
-  }),
-)
+export const AuthRoutes = router;
