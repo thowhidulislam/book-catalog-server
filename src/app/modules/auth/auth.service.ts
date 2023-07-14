@@ -5,7 +5,11 @@ import ApiError from '../../../errors/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { IUser } from '../user/user.interface';
 import { User } from '../user/user.model';
-import { ILoginUser, ILoginUserResponse } from './auth.interface';
+import {
+  ILoginUser,
+  ILoginUserResponse,
+  IRefreshTokenResponse,
+} from './auth.interface';
 
 const createUser = async (payload: IUser) => {
   const { email } = payload;
@@ -65,7 +69,42 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   };
 };
 
+const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
+  let verifiedToken = null;
+
+  try {
+    verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.refresh_secret as Secret,
+    );
+  } catch (error) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid token');
+  }
+
+  const { email } = verifiedToken;
+
+  const isUserExist = await User.isUserExist(email);
+
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const accessToken = jwtHelpers.createToken(
+    {
+      email: isUserExist.email,
+      role: isUserExist.role,
+    },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string,
+  );
+
+  return {
+    accessToken,
+  };
+};
+
 export const AuthService = {
   createUser,
   loginUser,
+  refreshToken,
 };
