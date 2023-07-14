@@ -1,7 +1,21 @@
+import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
+import ApiError from '../../../errors/ApiError';
 import { IGenericResponse } from '../../../interfaces/common';
+import { User } from '../user/user.model';
 import { bookSearchableFields } from './book.constant';
 import { IBook, IBookFilters } from './book.interface';
 import { Book } from './book.model';
+
+const addBook = async (user: JwtPayload, payload: IBook): Promise<IBook> => {
+  const isUserExist = await User.isUserExist(user.email);
+
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User not found');
+  }
+  const result = await Book.create(payload);
+  return result;
+};
 
 const getAllBooks = async (
   filters: IBookFilters,
@@ -35,5 +49,6 @@ const getAllBooks = async (
 };
 
 export const BookService = {
+  addBook,
   getAllBooks,
 };
