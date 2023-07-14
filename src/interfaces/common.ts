@@ -6,3 +6,7 @@ export type IGenericErrorResponse = {
   message: string;
   errorMessages: IGenericErrorMessage[];
 };
+
+export type IGenericResponse<T> = {
+  data: T;
+};
