@@ -28,7 +28,6 @@ const createUser = async (payload: IUser) => {
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { email, password } = payload;
   const isUserExist = await User.isUserExist(email);
-  console.log(isUserExist);
 
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');

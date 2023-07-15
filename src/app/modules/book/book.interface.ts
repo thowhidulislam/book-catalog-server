@@ -6,6 +6,7 @@ export type IBook = {
   genre: string;
   publicationDate: string;
   image: string;
+  reviews?: Array<string>;
   addedBy: Types.ObjectId;
 };
 

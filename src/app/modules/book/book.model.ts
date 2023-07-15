@@ -24,6 +24,18 @@ const bookSchema = new Schema<IBook, BookModel>(
       type: String,
       required: true,
     },
+    reviews: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: 'User',
+        },
+        message: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     addedBy: {
       type: Schema.Types.ObjectId,
       ref: 'User',

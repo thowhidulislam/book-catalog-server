@@ -17,6 +17,14 @@ const addBookZodSchema = z.object({
     image: z.string({
       required_error: 'Image is required',
     }),
+    reviews: z
+      .array(
+        z.object({
+          user: z.string({}),
+          message: z.string({}),
+        }),
+      )
+      .optional(),
     addedBy: z.string({
       required_error: 'Added By is required',
     }),
