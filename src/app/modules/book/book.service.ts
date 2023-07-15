@@ -87,9 +87,31 @@ const updateBook = async (
   return result;
 };
 
+const deleteBook = async (
+  user: JwtPayload,
+  id: string,
+): Promise<IBook | null> => {
+  const isBookExist = await Book.findOne({ _id: id }).populate('addedBy');
+
+  if (!isBookExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Book not found');
+  }
+  //@ts-ignore
+  const isAuthorizedUser = isBookExist.addedBy.email;
+
+  if (user.email !== isAuthorizedUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+  }
+
+  const result = await Book.findOneAndDelete({ _id: isBookExist._id });
+
+  return result;
+};
+
 export const BookService = {
   addBook,
   getAllBooks,
   getSingleBook,
   updateBook,
+  deleteBook,
 };
