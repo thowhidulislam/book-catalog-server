@@ -13,10 +13,16 @@ router.post(
   auth(ENUM_USER_ROLE.USER),
   BookController.addBook,
 );
+
 router.get('/getAllBooks', BookController.getAllBooks);
 
 router.get('/:id', BookController.getSingleBook);
-router.patch('/:id', auth(ENUM_USER_ROLE.USER), BookController.updateBook);
+router.patch(
+  '/:id',
+  validateRequest(BookValidation.updateBookZodSchema),
+  auth(ENUM_USER_ROLE.USER),
+  BookController.updateBook,
+);
 
 router.delete('/:id', auth(ENUM_USER_ROLE.USER), BookController.deleteBook);
 

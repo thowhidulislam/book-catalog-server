@@ -17,20 +17,23 @@ const addBookZodSchema = z.object({
     image: z.string({
       required_error: 'Image is required',
     }),
-    reviews: z
-      .array(
-        z.object({
-          user: z.string({}),
-          message: z.string({}),
-        }),
-      )
-      .optional(),
     addedBy: z.string({
       required_error: 'Added By is required',
     }),
   }),
 });
+const updateBookZodSchema = z.object({
+  body: z.object({
+    title: z.string().optional(),
+    author: z.string().optional(),
+    genre: z.string().optional(),
+    publicationDate: z.string().optional(),
+    image: z.string().optional(),
+    addedBy: z.string().optional(),
+  }),
+});
 
 export const BookValidation = {
   addBookZodSchema,
+  updateBookZodSchema,
 };
