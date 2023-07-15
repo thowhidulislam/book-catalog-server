@@ -7,7 +7,11 @@ import { IUser, UserModel } from './user.interface';
 const userSchema = new Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     password: { type: String, required: true, select: 0 },
     role: {
       type: String,
@@ -26,7 +30,7 @@ const userSchema = new Schema(
 userSchema.statics.isUserExist = async function (email: string) {
   return await User.findOne(
     { email: email },
-    { email: 1, password: 1, role: 1 },
+    { email: 1, password: 1, role: 1, _id: 1 },
   );
 };
 

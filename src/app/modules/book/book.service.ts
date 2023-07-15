@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import ApiError from '../../../errors/ApiError';
@@ -13,7 +14,7 @@ const addBook = async (user: JwtPayload, payload: IBook): Promise<IBook> => {
   if (!isUserExist) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'User not found');
   }
-  const result = await Book.create(payload);
+  const result = (await Book.create(payload)).populate('addedBy');
   return result;
 };
 
@@ -60,8 +61,35 @@ const getSingleBook = async (id: string): Promise<IBook | null> => {
   return result;
 };
 
+const updateBook = async (
+  user: JwtPayload,
+  id: string,
+  payload: Partial<IBook>,
+): Promise<IBook | null> => {
+  const isBookExist = await Book.findOne({ _id: id }).populate('addedBy');
+
+  if (!isBookExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Book not found');
+  }
+  //@ts-ignore
+  const isAuthorizedUser = isBookExist.addedBy.email;
+  if (user.email !== isAuthorizedUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+  }
+
+  const result = await Book.findOneAndUpdate(
+    { _id: isBookExist._id },
+    payload,
+    {
+      new: true,
+    },
+  );
+  return result;
+};
+
 export const BookService = {
   addBook,
   getAllBooks,
   getSingleBook,
+  updateBook,
 };
