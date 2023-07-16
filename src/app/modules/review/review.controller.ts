@@ -18,6 +18,19 @@ const addReview = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getReviewsByBookId = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await ReviewService.getReviewsByBookId(id);
+
+  sendResponse(res, {
+    success: true,
+    status: httpStatus.OK,
+    message: 'Reviews are fetched successfully',
+    data: result,
+  });
+});
+
 export const ReviewController = {
   addReview,
+  getReviewsByBookId,
 };

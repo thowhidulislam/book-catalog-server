@@ -38,6 +38,13 @@ const addReview = async (
   return result;
 };
 
+const getReviewsByBookId = async (id: string): Promise<IBookReview[]> => {
+  const result = await Review.find({ book: id });
+
+  return result;
+};
+
 export const ReviewService = {
   addReview,
+  getReviewsByBookId,
 };

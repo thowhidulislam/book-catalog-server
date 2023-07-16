@@ -14,4 +14,6 @@ router.post(
   ReviewController.addReview,
 );
 
+router.get('/:id', ReviewController.getReviewsByBookId);
+
 export const ReviewRoutes = router;
