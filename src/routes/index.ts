@@ -2,6 +2,7 @@ import express from 'express';
 import { AuthRoutes } from '../app/modules/auth/auth.route';
 import { BookRoutes } from '../app/modules/book/book.route';
 import { ReviewRoutes } from '../app/modules/review/review.route';
+import { WishlistRoutes } from '../app/modules/wishlist/wishlist.route';
 
 const router = express.Router();
 
@@ -17,6 +18,10 @@ const moduleRoutes = [
   {
     path: '/review',
     route: ReviewRoutes,
+  },
+  {
+    path: '/wishlist',
+    route: WishlistRoutes,
   },
 ];
 
