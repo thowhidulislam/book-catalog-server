@@ -40,9 +40,7 @@ const addBook = async (
 };
 
 const getBooksFromWishlist = async (user: JwtPayload): Promise<IWishlist[]> => {
-  console.log(user, 'user');
   const isUserExist = await User.isUserExist(user.email);
-  console.log(isUserExist, 'isUserExist');
   if (!isUserExist) {
     throw new ApiError(
       httpStatus.UNAUTHORIZED,
