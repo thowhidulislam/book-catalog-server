@@ -1,8 +1,8 @@
 import { Model, Types } from 'mongoose';
 
 export type IBookReview = {
-  book: Types.ObjectId;
-  user: Types.ObjectId;
+  book?: Types.ObjectId;
+  user?: Types.ObjectId;
   message: string;
 };
 

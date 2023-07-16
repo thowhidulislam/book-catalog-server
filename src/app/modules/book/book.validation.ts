@@ -17,9 +17,9 @@ const addBookZodSchema = z.object({
     image: z.string({
       required_error: 'Image is required',
     }),
-    addedBy: z.string({
-      required_error: 'Added By is required',
-    }),
+    // addedBy: z.string({
+    //   required_error: 'Added By is required',
+    // }),
   }),
 });
 const updateBookZodSchema = z.object({

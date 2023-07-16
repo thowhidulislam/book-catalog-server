@@ -18,7 +18,7 @@ const addReview = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Book not found');
   }
   //@ts-ignore
-  const isUserExist = await User.findOne({ email: user.email });
+  const isUserExist = await User.isUserExist(user.email);
 
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -26,6 +26,7 @@ const addReview = async (
 
   const reviewDetails = {
     book: isBookExist._id,
+    //@ts-ignore
     user: isUserExist._id,
     message: payload,
   };

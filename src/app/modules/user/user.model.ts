@@ -30,7 +30,7 @@ const userSchema = new Schema(
 userSchema.statics.isUserExist = async function (email: string) {
   return await User.findOne(
     { email: email },
-    { email: 1, password: 1, role: 1, _id: 1 },
+    { email: 1, password: 1, role: 1 },
   );
 };
 

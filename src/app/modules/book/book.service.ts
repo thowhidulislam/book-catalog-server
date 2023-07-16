@@ -8,13 +8,20 @@ import { bookSearchableFields } from './book.constant';
 import { IBook, IBookFilters } from './book.interface';
 import { Book } from './book.model';
 
-const addBook = async (user: JwtPayload, payload: IBook): Promise<IBook> => {
+const addBook = async (
+  user: JwtPayload,
+  payload: IBook,
+): Promise<IBook | null> => {
   const isUserExist = await User.isUserExist(user.email);
 
   if (!isUserExist) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'User not found');
   }
-  const result = (await Book.create(payload)).populate('addedBy');
+
+  //@ts-ignore
+  payload.addedBy = isUserExist._id;
+
+  const result = await (await Book.create(payload)).populate('addedBy');
   return result;
 };
 
