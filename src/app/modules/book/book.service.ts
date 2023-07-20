@@ -2,7 +2,6 @@
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import ApiError from '../../../errors/ApiError';
-import { IGenericResponse } from '../../../interfaces/common';
 import { User } from '../user/user.model';
 import { bookSearchableFields } from './book.constant';
 import { IBook, IBookFilters } from './book.interface';
@@ -25,10 +24,8 @@ const addBook = async (
   return result;
 };
 
-const getAllBooks = async (
-  filters: IBookFilters,
-): Promise<IGenericResponse<IBook[]>> => {
-  const { searchTerm, ...filtersData } = filters;
+const getAllBooks = async (filters: IBookFilters): Promise<IBook[]> => {
+  const { searchTerm, publicationDate, ...filtersData } = filters;
   const andConditions = [];
 
   if (searchTerm) {
@@ -39,6 +36,16 @@ const getAllBooks = async (
           $options: 'i',
         },
       })),
+    });
+  }
+
+  if (publicationDate) {
+    const [startYear, endYear] = publicationDate.split('-').map(Number);
+    andConditions.push({
+      publicationDate: {
+        $gte: startYear,
+        $lte: endYear,
+      },
     });
   }
 
@@ -53,7 +60,7 @@ const getAllBooks = async (
   const whereConditions =
     andConditions.length > 0 ? { $and: andConditions } : {};
   const result = await Book.find(whereConditions);
-  return { data: result };
+  return result;
 };
 
 const getSingleBook = async (id: string): Promise<IBook | null> => {
