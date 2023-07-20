@@ -21,7 +21,6 @@ const addBook = catchAsync(async (req: Request, res: Response) => {
 
 const getAllBooks = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, bookFilterableFields);
-  console.log('filters', filters);
   const result = await BookService.getAllBooks(filters);
 
   sendResponse(res, {

@@ -26,7 +26,6 @@ const addBook = async (
 
 const getAllBooks = async (filters: IBookFilters): Promise<IBook[]> => {
   const { searchTerm, publicationDate, ...filtersData } = filters;
-  console.log('pulicationDate', publicationDate?.split(','));
 
   const andConditions = [];
 
