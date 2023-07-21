@@ -25,7 +25,7 @@ const addBook = async (
 };
 
 const getAllBooks = async (filters: IBookFilters): Promise<IBook[]> => {
-  const { searchTerm, publicationDate, ...filtersData } = filters;
+  const { searchTerm, publicationDate, genre, ...filtersData } = filters;
 
   const andConditions = [];
 
@@ -58,6 +58,19 @@ const getAllBooks = async (filters: IBookFilters): Promise<IBook[]> => {
     });
 
     andConditions.push({ $or: orConditions });
+  }
+
+  if (genre) {
+    const updatedGenre = genre.split(',');
+    const orConditions = updatedGenre.map(sGenre => {
+      return {
+        genre: sGenre,
+      };
+    });
+    console.log(orConditions, 'orConditions genre');
+    andConditions.push({
+      $or: orConditions,
+    });
   }
 
   if (Object.keys(filtersData).length) {
