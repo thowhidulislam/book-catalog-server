@@ -41,25 +41,23 @@ const getAllBooks = async (filters: IBookFilters): Promise<IBook[]> => {
   }
 
   if (publicationDate) {
-    const dateRanges = publicationDate.split(',');
-    const { leastYear, highestYear } = dateRanges.reduce(
-      (acc, range) => {
-        const [startYear, endYear] = range.split('-').map(Number);
+    // Split the publicationYearRange string into multiple ranges
+    const yearRanges = publicationDate.split(',');
 
-        return {
-          leastYear: Math.min(acc.leastYear, startYear),
-          highestYear: Math.max(acc.highestYear, endYear),
-        };
-      },
-      { leastYear: Infinity, highestYear: -Infinity },
-    );
-
-    andConditions.push({
-      publicationDate: {
-        $gte: leastYear,
-        $lte: highestYear,
-      },
+    // Create separate filter conditions for each range
+    const orConditions = yearRanges.map(range => {
+      const [startYear, endYear] = range.split('-');
+      const start = parseInt(startYear, 10);
+      const end = parseInt(endYear, 10);
+      return {
+        publicationDate: {
+          $gte: start,
+          $lte: end,
+        },
+      };
     });
+
+    andConditions.push({ $or: orConditions });
   }
 
   if (Object.keys(filtersData).length) {
