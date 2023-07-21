@@ -64,10 +64,12 @@ const getAllBooks = async (filters: IBookFilters): Promise<IBook[]> => {
     const updatedGenre = genre.split(',');
     const orConditions = updatedGenre.map(sGenre => {
       return {
-        genre: sGenre,
+        genre: {
+          $regex: sGenre,
+          $options: 'i',
+        },
       };
     });
-    console.log(orConditions, 'orConditions genre');
     andConditions.push({
       $or: orConditions,
     });
