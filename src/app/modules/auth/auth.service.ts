@@ -20,6 +20,8 @@ const createUser = async (payload: IUser) => {
     throw new Error('Email is already exist');
   }
 
+  payload.role = 'user';
+
   const result = await User.create(payload);
 
   return result;
