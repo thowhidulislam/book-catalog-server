@@ -24,6 +24,19 @@ const addBook = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
+  const isBookAlreadyAdded = await Wishlist.findOne({
+    // @ts-ignore
+    user: isUserExist._id,
+    book: payload,
+  });
+
+  if (isBookAlreadyAdded) {
+    throw new ApiError(
+      httpStatus.FOUND,
+      'You already added this book in your wishlist',
+    );
+  }
+
   const wishlistDetails = {
     book: isBookExist._id,
     //@ts-ignore
