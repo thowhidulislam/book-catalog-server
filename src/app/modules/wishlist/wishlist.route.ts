@@ -20,4 +20,10 @@ router.get(
   WishlistController.getBooksFromWishlist,
 );
 
+router.delete(
+  '/:id',
+  auth(ENUM_USER_ROLE.USER),
+  WishlistController.deleteBookFromWishlist,
+);
+
 export const WishlistRoutes = router;

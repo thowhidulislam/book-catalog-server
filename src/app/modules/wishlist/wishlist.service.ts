@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
@@ -71,7 +72,42 @@ const getBooksFromWishlist = async (user: JwtPayload): Promise<IWishlist[]> => {
   return result;
 };
 
+const deleteBookFromWishlist = async (
+  user: JwtPayload,
+  payload: string,
+): Promise<IWishlist | null> => {
+  const isBookExist = await Book.findOne({
+    _id: payload,
+  });
+
+  if (!isBookExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Book not found');
+  }
+  const isUserExist = await User.isUserExist(user.email);
+
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const isBookAlreadyAdded = await Wishlist.findOne({
+    // @ts-ignore
+    user: isUserExist._id,
+    book: payload,
+  });
+
+  const wishlistDetails = {
+    book: isBookExist._id,
+    //@ts-ignore
+    user: isUserExist._id,
+  };
+
+  const result = await Wishlist.findOneAndDelete(wishlistDetails);
+
+  return result;
+};
+
 export const WishlistService = {
   addBook,
   getBooksFromWishlist,
+  deleteBookFromWishlist,
 };
