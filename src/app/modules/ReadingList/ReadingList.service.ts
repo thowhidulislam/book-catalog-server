@@ -24,6 +24,20 @@ const addBook = async (
   if (!isUserExist) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Yore are not authorized');
   }
+
+  const isBookAlreadyAdded = await ReadingList.findOne({
+    book: isBookExist._id,
+    // @ts-ignore
+    user: isUserExist._id,
+  });
+
+  if (isBookAlreadyAdded) {
+    throw new ApiError(
+      httpStatus.NOT_ACCEPTABLE,
+      'You have already added this book to your reading list',
+    );
+  }
+
   // @ts-ignore
   const isAuthorizedUser = isUserExist._id;
 
@@ -66,6 +80,7 @@ const updateBookStatus = async (
   user: JwtPayload,
   id: string,
 ): Promise<IReadingList | null> => {
+  console.log('id', id);
   const isBookExist = await ReadingList.findOne({
     book: id,
   });

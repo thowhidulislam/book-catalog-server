@@ -5,10 +5,10 @@ import sendResponse from '../../../shared/sendResponse';
 import { ReadingListService } from './ReadingList.service';
 
 const addBook = catchAsync(async (req: Request, res: Response) => {
-  const bookId = req.body;
+  const { bookId } = req.body;
   const user = req.user;
 
-  const result = await ReadingListService.addBook(user!, bookId.book);
+  const result = await ReadingListService.addBook(user!, bookId);
 
   sendResponse(res, {
     success: true,
