@@ -12,7 +12,7 @@ const readingListSchema = new Schema<IReadingList, ReadingListModel>({
   },
   isReading: {
     type: Boolean,
-    default: true,
+    default: false,
   },
 });
 
