@@ -80,7 +80,6 @@ const updateBookStatus = async (
   user: JwtPayload,
   id: string,
 ): Promise<IReadingList | null> => {
-  console.log('id', id);
   const isBookExist = await ReadingList.findOne({
     book: id,
   });
@@ -96,8 +95,8 @@ const updateBookStatus = async (
     );
   }
 
-  if (isBookExist.isReading) {
-    isBookExist.isReading = false;
+  if (isBookExist.isReading === false) {
+    isBookExist.isReading = true;
   } else {
     throw new ApiError(httpStatus.NOT_ACCEPTABLE, 'Book is already read');
   }
