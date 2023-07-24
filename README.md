@@ -28,7 +28,7 @@
 
 ### Auth(User)
 
----
+-----------------------------------
 - Route: https://bookshelf-server-nu.vercel.app/api/v1/auth/signup (POST)
 - Route: https://bookshelf-server-nu.vercel.app/api/v1/auth/login (POST)
 - Route: https://bookshelf-server-nu.vercel.app/api/v1/auth/refresh-token (POST)
